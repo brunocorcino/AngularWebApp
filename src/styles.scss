@@ -2,3 +2,30 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.alertSuccess {
+    color: darkgreen !important;
+    background-color: #d4edda !important;
+    border-color: #c3e6cb !important;
+    .mat-simple-snackbar-action {
+        color: #155724 !important;
+    }
+}
+
+.alertInfo {
+    color: darkorange !important;
+    background-color: #ede1d4 !important;
+    border-color: #e6dec3 !important;
+    .mat-simple-snackbar-action {
+        color: darkorange !important;
+    }
+}
+
+.alertError {
+    color: darkred !important;
+    background-color: #edd4d4 !important;
+    border-color: #e6c3c3 !important;
+    .mat-simple-snackbar-action {
+        color: darkred !important;
+    }
+}

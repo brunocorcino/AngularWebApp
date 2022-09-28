@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
+import { AlertService } from './services/shared/alert.service';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,9 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
     MatSnackBarModule
   ],
-  providers: [],
+  providers: [
+    AlertService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
