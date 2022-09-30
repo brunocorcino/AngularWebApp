@@ -1,0 +1,6 @@
+<mat-card-actions>
+    <button mat-raised-button color="warn" type="button" *ngIf="!esconderBotaoExcluir" (click)="btnExcluirClick()">Excluir</button>
+    <button mat-raised-button color="secondary" type="button" *ngIf="!esconderBotaoCancelar" (click)="btnCancelarClick()">Cancelar</button>
+    <button mat-raised-button color="primary" *ngIf="!esconderBotaoSalvarFechar" type="submit">Salvar e Fechar</button>
+    <button mat-raised-button color="primary" type="button" *ngIf="!esconderBotaoSalvar" (click)="btnSalvarClick()">Salvar</button>
+</mat-card-actions>

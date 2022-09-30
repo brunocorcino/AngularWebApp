@@ -12,10 +12,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IndexComponent } from './index/index.component';
 import { EditComponent } from './edit/edit.component';
 import { CarrosRoutingModule } from './carros-routing.module';
+import { FooterButtonsModule } from 'src/app/components/footer-buttons/footer-buttons.module';
+import { VerificarValorNuloPipeModule } from 'src/app/pipes/verificar-valor-nulo/verificar-valor-nulo.pipe.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import { CarrosRoutingModule } from './carros-routing.module';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     CarrosRoutingModule,
     MatToolbarModule,
     MatButtonModule,
@@ -37,7 +40,9 @@ import { CarrosRoutingModule } from './carros-routing.module';
     MatSelectModule,
     MatRadioModule,
     MatCardModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FooterButtonsModule,
+    VerificarValorNuloPipeModule
   ]
 })
 export class CarrosModule { }

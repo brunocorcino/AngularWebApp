@@ -1,6 +1,6 @@
 import { BaseModel } from "../base/base.model";
 
-export interface CarroList extends BaseModel {
+export interface CarrosList extends BaseModel {
     modelo: string;
     marca: string;
     anoFabricacao: number;

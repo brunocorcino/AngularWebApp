@@ -1,93 +1,85 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { CarrosEdit } from 'src/app/models/carros/carros-edit.model';
+import { CarrosService } from 'src/app/services/carros.service';
+import { AlertService } from 'src/app/services/shared/alert.service';
+import { EditBaseComponent } from '../../base/edit-base.component';
+import { Erros } from 'src/app/constants/messages/erros';
+import { MarcasFilterParams } from 'src/app/filter-params/marcas.filter-params';
+import { MarcasService } from 'src/app/services/marcas.service';
+import { MarcasList } from 'src/app/models/marcas/marcas-list.model';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent {
-  addressForm = this.fb.group({
-    company: null,
-    firstName: [null, Validators.required],
-    lastName: [null, Validators.required],
-    address: [null, Validators.required],
-    address2: null,
-    city: [null, Validators.required],
-    state: [null, Validators.required],
-    postalCode: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(5)])
-    ],
-    shipping: ['free', Validators.required]
+export class EditComponent extends EditBaseComponent<CarrosEdit, CarrosService> {
+  constructor(route: ActivatedRoute,
+    router: Router,
+    alertService: AlertService,
+    service: CarrosService,
+    private fb: FormBuilder,
+    private marcasService: MarcasService) {
+      super(route, router, alertService, service);
+    }
+
+  carrosForm = this.fb.group({
+    modelo: [null, Validators.required],
+    idMarca: [null, Validators.required],
+    anoFabricacao: [null, Validators.required],
+    anoModelo: [null, Validators.required],
+    quantidadePortas: [null, Validators.required],
+    automatico: [null, Validators.required]
   });
 
-  hasUnitNumber = false;
+  listaMarcas: MarcasList[] = [];
+  erros = Erros;
 
-  states = [
-    {name: 'Alabama', abbreviation: 'AL'},
-    {name: 'Alaska', abbreviation: 'AK'},
-    {name: 'American Samoa', abbreviation: 'AS'},
-    {name: 'Arizona', abbreviation: 'AZ'},
-    {name: 'Arkansas', abbreviation: 'AR'},
-    {name: 'California', abbreviation: 'CA'},
-    {name: 'Colorado', abbreviation: 'CO'},
-    {name: 'Connecticut', abbreviation: 'CT'},
-    {name: 'Delaware', abbreviation: 'DE'},
-    {name: 'District Of Columbia', abbreviation: 'DC'},
-    {name: 'Federated States Of Micronesia', abbreviation: 'FM'},
-    {name: 'Florida', abbreviation: 'FL'},
-    {name: 'Georgia', abbreviation: 'GA'},
-    {name: 'Guam', abbreviation: 'GU'},
-    {name: 'Hawaii', abbreviation: 'HI'},
-    {name: 'Idaho', abbreviation: 'ID'},
-    {name: 'Illinois', abbreviation: 'IL'},
-    {name: 'Indiana', abbreviation: 'IN'},
-    {name: 'Iowa', abbreviation: 'IA'},
-    {name: 'Kansas', abbreviation: 'KS'},
-    {name: 'Kentucky', abbreviation: 'KY'},
-    {name: 'Louisiana', abbreviation: 'LA'},
-    {name: 'Maine', abbreviation: 'ME'},
-    {name: 'Marshall Islands', abbreviation: 'MH'},
-    {name: 'Maryland', abbreviation: 'MD'},
-    {name: 'Massachusetts', abbreviation: 'MA'},
-    {name: 'Michigan', abbreviation: 'MI'},
-    {name: 'Minnesota', abbreviation: 'MN'},
-    {name: 'Mississippi', abbreviation: 'MS'},
-    {name: 'Missouri', abbreviation: 'MO'},
-    {name: 'Montana', abbreviation: 'MT'},
-    {name: 'Nebraska', abbreviation: 'NE'},
-    {name: 'Nevada', abbreviation: 'NV'},
-    {name: 'New Hampshire', abbreviation: 'NH'},
-    {name: 'New Jersey', abbreviation: 'NJ'},
-    {name: 'New Mexico', abbreviation: 'NM'},
-    {name: 'New York', abbreviation: 'NY'},
-    {name: 'North Carolina', abbreviation: 'NC'},
-    {name: 'North Dakota', abbreviation: 'ND'},
-    {name: 'Northern Mariana Islands', abbreviation: 'MP'},
-    {name: 'Ohio', abbreviation: 'OH'},
-    {name: 'Oklahoma', abbreviation: 'OK'},
-    {name: 'Oregon', abbreviation: 'OR'},
-    {name: 'Palau', abbreviation: 'PW'},
-    {name: 'Pennsylvania', abbreviation: 'PA'},
-    {name: 'Puerto Rico', abbreviation: 'PR'},
-    {name: 'Rhode Island', abbreviation: 'RI'},
-    {name: 'South Carolina', abbreviation: 'SC'},
-    {name: 'South Dakota', abbreviation: 'SD'},
-    {name: 'Tennessee', abbreviation: 'TN'},
-    {name: 'Texas', abbreviation: 'TX'},
-    {name: 'Utah', abbreviation: 'UT'},
-    {name: 'Vermont', abbreviation: 'VT'},
-    {name: 'Virgin Islands', abbreviation: 'VI'},
-    {name: 'Virginia', abbreviation: 'VA'},
-    {name: 'Washington', abbreviation: 'WA'},
-    {name: 'West Virginia', abbreviation: 'WV'},
-    {name: 'Wisconsin', abbreviation: 'WI'},
-    {name: 'Wyoming', abbreviation: 'WY'}
-  ];
+  getNewModelToCreate(): Observable<CarrosEdit> {
+    return new Observable(observer => {
+      const model: CarrosEdit = {
+        anoFabricacao: new Date().getFullYear(),
+        anoModelo: new Date().getFullYear(),
+        automatico: false,
+        idMarca: '',
+        modelo: '',
+        quantidadePortas: 4
+      }
+      observer.next(model);
+    });
+  }
 
-  constructor(private fb: FormBuilder) {}
+  listarMarcas(): Subscription {
+    const filter: MarcasFilterParams = {};
 
-  onSubmit(): void {
-    alert('Thanks!');
+    return this.marcasService.list(filter).subscribe({
+      next: (data) => {
+        this.listaMarcas = data;
+      }
+    })
+  }
+
+  override dataLoaded(data: CarrosEdit): void {
+    if (!this.listaMarcas.length) {
+      this.listarMarcas();
+    }
+
+    super.dataLoaded(data);
+  }
+
+  override isValid(isSavingNew: boolean): boolean {
+      let isValid = this.carrosForm.valid;
+
+      if (!isValid) {
+        this.carrosForm.markAllAsTouched();
+        return isValid;
+      }
+      
+      isValid = super.isValid(isSavingNew);
+
+      return isValid;
   }
 }

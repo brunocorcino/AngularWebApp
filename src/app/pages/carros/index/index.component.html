@@ -1,26 +1,80 @@
 <div class="mat-elevation-z8">
-  <table mat-table class="full-width-table" matSort aria-label="Elements">
-    <!-- Id Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-      <td mat-cell *matCellDef="let row">{{row.id}}</td>
-    </ng-container>
+  <form novalidate>
+    <mat-card class="shipping-card">
+      <mat-card-header>
+        <mat-card-title>Busca de carros</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="full-width">
+              <mat-label>Modelo</mat-label>
+              <input matInput name="modelo" [(ngModel)]="filterParams.modelo">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field class="full-width">
+              <mat-label>Marcas</mat-label>
+              <mat-select [(ngModel)]="filterParams.idMarca" name="idMarca">
+                <mat-option *ngFor="let marca of listaMarcas" [value]="marca.id">
+                  {{ marca.nome }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="button" (click)="list()">Buscar</button>
+        <button mat-raised-button color="primary" type="button" (click)="novo()">Novo</button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let row">{{row.name}}</td>
-    </ng-container>
+  <div *ngIf="showGrid">
+    <table mat-table class="full-width-table" matSort aria-label="Elements" [dataSource]="rows">
+      <ng-container matColumnDef="modelo">
+        <th mat-header-cell *matHeaderCellDef>Modelo</th>
+        <td mat-cell *matCellDef="let row">{{row.modelo}}</td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      <ng-container matColumnDef="marca">
+        <th mat-header-cell *matHeaderCellDef>Marca</th>
+        <td mat-cell *matCellDef="let row">{{row.marca}}</td>
+      </ng-container>
 
-  <mat-paginator #paginator
-      [length]="dataSource.data.length"
-      [pageIndex]="0"
-      [pageSize]="10"
-      [pageSizeOptions]="[5, 10, 20]"
-      aria-label="Select page">
-  </mat-paginator>
+      <ng-container matColumnDef="anoFabricacaoModelo">
+        <th mat-header-cell *matHeaderCellDef>Ano fabricação/modelo</th>
+        <td mat-cell *matCellDef="let row">{{row.anoFabricacao.toString().slice(-2)}}/{{row.anoModelo.toString().slice(-2)}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="automatico">
+        <th mat-header-cell *matHeaderCellDef>Automático?</th>
+        <td mat-cell *matCellDef="let row">{{row.automatico }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button color="primary" title="Editar" (click)="editar(row.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" title="Deletar" (click)="deletar(row.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator #paginator
+        [length]="rows.data.length"
+        [pageIndex]="0"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 20]"
+        aria-label="Select page">
+    </mat-paginator>
+  </div>
 </div>

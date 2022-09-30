@@ -17,6 +17,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { AlertService } from './services/shared/alert.service';
+import { VerificarValorNuloPipeModule } from './pipes/verificar-valor-nulo/verificar-valor-nulo.pipe.module';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { AlertService } from './services/shared/alert.service';
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    VerificarValorNuloPipeModule
   ],
   providers: [
     AlertService
